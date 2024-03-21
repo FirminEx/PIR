@@ -12,7 +12,7 @@ class Server:
     
   def answer(self, v, public_key: (int, int)):
     t = math.prod([v[i] ** self.db[i] for i in range(self.db_size)])
-    # print(sys.getsizeof(t))
+    print('server payload', sys.getsizeof(t))
     return t
     
     

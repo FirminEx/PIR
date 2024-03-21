@@ -34,3 +34,10 @@ def mesure_time(db_size):
   
   assert(client.decrypt_answer(server_answer) == server.db[index])
   return (client_time, server_time)
+
+print(mesure_time(5))
+print(mesure_time(10))
+print(mesure_time(15))
+print(mesure_time(20))
+print(mesure_time(25))
+print(mesure_time(30))
