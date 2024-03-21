@@ -5,9 +5,9 @@ from math import gcd
 
 class Paillier:
     def __init__(self, bits):
-        self.keyGen(bits)
+        self.key_gen(bits)
 
-    def keyGen(self, bits):
+    def key_gen(self, bits):
         p = number.getPrime(bits)
         q = number.getPrime(bits)
         n = p * q
@@ -24,15 +24,15 @@ class Paillier:
         self.private_key = (lambda_, mu)
         
 
-    def encrypt(self, message: int):
-        if (message >= self.n or message < 0):
+    def encrypt(self, message: int, public_key: (int, int)):
+        if (message >= public_key[0] or message < 0):
             raise Exception('Message should be smaller than n and positive')
 
-        r = generate_random_encrypt(self.public_key[0])
-        g_message = pow(self.g, message, self.n2)
-        r_n = pow(r, self.n, self.n2) 
+        r = generate_random_encrypt(public_key[0])
+        g_message = pow(public_key[1], message, public_key[0] ** 2)
+        r_n = pow(r, public_key[0], public_key[0] ** 2) 
         
-        return (g_message * r_n) % (self.n2)
+        return (g_message * r_n) % (public_key[0] ** 2)
             
     def decrypt(self, ciphertext: int):
         x = pow(ciphertext, self.lambda_, self.n ** 2)
@@ -43,14 +43,14 @@ class Paillier:
 phe = Paillier(1024)
 
 m = "Trying to encrypt this message using Paillier"
-c = phe.encrypt(string_to_int(m))
+c = phe.encrypt(string_to_int(m), phe.public_key)
 assert(int_to_string(phe.decrypt(c)) == m)
 
 
 m1 = string_to_int('This is the first message')
 m2 = string_to_int('That is another message')
-c1 = phe.encrypt(m1)
-c2 = phe.encrypt(m2)
+c1 = phe.encrypt(m1, phe.public_key)
+c2 = phe.encrypt(m2, phe.public_key)
 
 c1_c2_product = (c1 * c2) % phe.n2
 assert(phe.decrypt(c1_c2_product) == m1 + m2)
