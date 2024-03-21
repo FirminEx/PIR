@@ -1,6 +1,8 @@
 from Crypto.PublicKey import DSA
 from Crypto.Hash import SHA256
 from Crypto.Signature import DSS
+import random
+from math import gcd
 
 def string_to_bytes(str: str):
     """Converts string to bytes."""
@@ -40,3 +42,9 @@ def verify_signature(public_key_filename, bytes_message, signature):
     hash_obj = SHA256.new(bytes_message)
     verifier = DSS.new(public_key, 'fips-186-3')
     verifier.verify(hash_obj, signature)
+    
+def generate_random_encrypt(n):
+    while True:
+        r = random.randint(1, n-1)  
+        if gcd(r, n) == 1:
+            return r  
